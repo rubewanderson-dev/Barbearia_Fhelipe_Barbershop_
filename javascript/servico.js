@@ -63,5 +63,5 @@ btn.addEventListener("click", () => {
     return;
   }
 
-  window.location.href = "agendarServico.html";
+  window.location.href = "../pages/agendarServico.html";
 });
