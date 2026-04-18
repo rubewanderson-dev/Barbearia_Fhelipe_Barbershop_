@@ -50,11 +50,7 @@ main {
   padding: 60px 80px;
 }
 
-@media (max-width: 768px) {
-  main {
-    padding: 20px;
-  }
-}
+
 
 /* MENU */
 nav ol {
@@ -416,40 +412,7 @@ PAINEL
   border-left: 4px solid green;
 }
 
-/* =====================
-📱 RESPONSIVO
-===================== */
-@media (max-width: 768px) {
 
-  .btn-nav {
-    font-size: 18px;
-    padding: 8px 10px;
-  }
-
-  .btn-prev {
-    left: 8px;
-  }
-
-  .btn-next {
-    right: 8px;
-  }
-}
-
-@media (max-width: 480px) {
-
-  .servicos-opcoes {
-    grid-template-columns: 1fr;
-  }
-
-  header h1 {
-    font-size: 16px;
-    text-align: center;
-  }
-
- .servicos-opcoes {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 /* =====================
 ✨ ANIMAÇÕES SUAVES
 ===================== */
@@ -491,30 +454,7 @@ button {
 html, body {
   overflow-x: hidden;
 }
-@media (max-width: 768px) {
 
-  header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  nav ol {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-}
-/* =====================
-🛍️ PRODUTOS (VITRINE PREMIUM)
-===================== */
-
-.grid-produtos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
-  margin-top: 30px;
-}
 
 /* CARD */
 .produto-card {
@@ -582,4 +522,80 @@ html, body {
   .grid-produtos {
     grid-template-columns: 1fr;
   }
+}
+@media (max-width: 450px) {
+
+  #servico {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+    gap: 10px;
+    justify-content: center;
+  }
+
+  #servico section {
+    width: 100%;
+    margin: 0;
+  }
+  body {
+  overflow-x: hidden;
+}
+
+}
+@media (max-width: 768px) {
+  main {
+    padding: 20px;
+  }
+}
+/* =====================
+📱 RESPONSIVO
+===================== */
+@media (max-width: 768px) {
+
+  .btn-nav {
+    font-size: 18px;
+    padding: 8px 10px;
+  }
+
+  .btn-prev {
+    left: 8px;
+  }
+
+  .btn-next {
+    right: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+ header h1 {
+    font-size: 16px;
+    text-align: center;
+  }
+
+ .servicos-opcoes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  nav ol {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+}
+/* =====================
+🛍️ PRODUTOS (VITRINE PREMIUM)
+===================== */
+
+.grid-produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
 }
