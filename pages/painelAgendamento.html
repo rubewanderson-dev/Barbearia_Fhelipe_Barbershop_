@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Agendamentos</title>
+  <link rel="stylesheet" href="../style/main.css">
+  <link rel="stylesheet" href="../style/painel.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+<link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
+<link rel="manifest" href="../favicon/site.webmanifest">
+
+</head>
+<body>
+  
+<header>
+    <div class="nomeDaBarbearia"><h1>FHELIPE BARBERSHOP</h1></div>
+    <div>
+      <nav>
+      <ol>
+        <li> <a href="../index.html">Inicio</a></li>
+        <li><a href="servico.html">Serviços</a></li>
+        <li><a href="agendamento.html">Agendar</a></li>
+         <li><a href="produtos.html">Produtos</a></li>
+        <li><a href="painelAgendamento.html">Agendados</a></li>
+        <li><a href="sobre.html">Sobre</a></li>
+      </ol>
+    </nav>
+  </div>
+  </header>
+<header>
+  <h1>AGENDAMENTOS</h1>
+</header>
+<button onclick="logout()">Sair</button>
+<main>
+
+  <h2>Pendentes</h2>
+  <div id="pendentes"></div>
+
+  <h2 style="margin-top:30px;">Concluídos</h2>
+  <div id="concluidos"></div>
+
+</main>
+
+<script type="module">// 🔐 PROTEÇÃO
+const usuario = localStorage.getItem("usuario");
+
+if (!usuario) {
+  window.location.replace("login.html"); // melhor que href
+} else {
+
+  // 🔥 SÓ EXECUTA SE ESTIVER LOGADO
+
+  import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js").then(({ initializeApp }) => {
+    import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js").then(({ getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc }) => {
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD64nVKdxmTd3tNsgTMQ9HEal49AUVvIEs",
+        authDomain: "barbearia-649d6.firebaseapp.com",
+        projectId: "barbearia-649d6",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const pendentesDiv = document.getElementById('pendentes');
+      const concluidosDiv = document.getElementById('concluidos');
+
+      onSnapshot(collection(db, "agendamentos"), (snapshot) => {
+
+        pendentesDiv.innerHTML = "";
+        concluidosDiv.innerHTML = "";
+
+        const lista = [];
+
+        snapshot.forEach((docSnap) => {
+          lista.push({
+            id: docSnap.id,
+            ...docSnap.data()
+          });
+        });
+
+        lista.sort((a, b) => {
+          const dataA = new Date(`${a.data}T${a.hora}`);
+          const dataB = new Date(`${b.data}T${b.hora}`);
+          return dataA - dataB;
+        });
+
+lista.forEach((ag) => {
+
+  const card = document.createElement('div');
+
+  card.innerHTML = `
+    <p><strong>${ag.nome}</strong></p>
+    <p>${ag.servico}</p>
+    <p>Extras: ${(ag.extras || []).join(", ")}</p>
+    <p>${ag.data} às ${ag.hora}</p>
+    <p>Tempo: ${ag.tempo} min</p>
+    <p>Valor: R$ ${ag.valor}</p>
+  `;
+
+  // 👇 AGORA SIM FUNCIONA
+  if (!ag.status || ag.status === "pendente") {
+    card.classList.add("pendente");
+  } else {
+    card.classList.add("concluido");
+  }
+
+  if (!ag.status || ag.status === "pendente") {
+
+    const btn = document.createElement('button');
+    btn.innerText = "Atendido";
+
+    btn.onclick = async () => {
+      await updateDoc(doc(db, "agendamentos", ag.id), {
+        status: "concluido"
+      });
+    };
+
+    card.appendChild(btn);
+    pendentesDiv.appendChild(card);
+
+  } else {
+
+    const btn = document.createElement('button');
+    btn.innerText = "Remover";
+
+    btn.onclick = async () => {
+      await deleteDoc(doc(db, "agendamentos", ag.id));
+    };
+
+    card.appendChild(btn);
+    concluidosDiv.appendChild(card);
+  }
+
+});
+
+      });
+
+    });
+  });
+
+}
+function logout() {
+  localStorage.clear(); // 🔥 garante que tudo seja removido
+window.location.href = "login.html";
+}
+
+// 🚪 LOGOUT (reforçado)
+
+
+window.logout = logout;
+</script>
+</body>
+</html>

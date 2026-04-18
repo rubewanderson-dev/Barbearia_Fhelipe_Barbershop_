@@ -1,0 +1,586 @@
+/* =====================
+🎨 TEMA PREMIUM
+===================== */
+:root {
+  --preto: #0b0b0b;
+  --cinza: #141414;
+  --cinza-borda: #222;
+  --texto: #eaeaea;
+  --texto-fraco: #aaa;
+  --dourado: #d4af37;
+  --dourado-hover: #f1c94a;
+}
+img, video, iframe {
+  max-width: 100%;
+  display: block;
+}
+/* RESET (MANTER) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BASE */
+body {
+  background: radial-gradient(circle at top, #111, #050505);
+  color: var(--texto);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* =====================
+HEADER
+===================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 50px;
+  background: rgba(15,15,15,0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--cinza-borda);
+}
+
+header h1 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 2px;
+  color: var(--dourado);
+}
+main {
+  padding: 60px 80px;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 20px;
+  }
+}
+
+/* MENU */
+nav ol {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--texto-fraco);
+  position: relative;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background: var(--dourado);
+  left: 0;
+  bottom: -5px;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: #fff;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* =====================
+LAYOUT
+===================== */
+main {
+  padding: 60px 80px;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 2px;
+  color: var(--dourado);
+}
+
+/* =====================
+💎 CARDS PREMIUM
+===================== */
+.servico-card,
+#servico section,
+.pendente,
+.concluido {
+  background: linear-gradient(145deg, #111, #1a1a1a);
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 15px;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* EFEITO BRILHO */
+.servico-card::before,
+#servico section::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(212,175,55,0.2), transparent);
+  top: 0;
+  left: -100%;
+  transition: 0.5s;
+}
+
+.servico-card:hover::before,
+#servico section:hover::before {
+  left: 100%;
+}
+
+.servico-card:hover,
+#servico section:hover {
+  transform: translateY(-6px);
+  border-color: var(--dourado);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+.servico-card.ativo,
+#servico section.ativo {
+  border: 2px solid var(--dourado);
+  box-shadow: 0 0 15px rgba(212,175,55,0.4);
+}
+
+/* =====================
+💰 TEXTO DOS CARDS
+===================== */
+.servico-card h4 {
+  font-size: 14px;
+}
+
+.servico-card p {
+  font-size: 12px;
+  color: var(--texto-fraco);
+}
+
+.servico-card span {
+  font-size: 15px;
+  color: var(--dourado);
+  font-weight: bold;
+  display: block;
+  margin-top: 6px;
+}
+
+/* =====================
+GRID SERVIÇOS
+===================== */
+.servicos-opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+/* =====================
+INPUTS
+===================== */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  color: white;
+  border-radius: 8px;
+}
+
+/* =====================
+BOTÕES PREMIUM
+===================== */
+button {
+  background: linear-gradient(45deg, var(--dourado), var(--dourado-hover));
+  color: #000;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 5px 15px rgba(212,175,55,0.3);
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* =====================
+HORÁRIOS
+===================== */
+#gradeHorarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.horario {
+  padding: 10px;
+  width: 65px;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.horario.livre {
+  background: #1a1a1a;
+  border: 1px solid #333;
+}
+
+.horario.ocupado {
+  background: #2a2a2a;
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.horario.selecionado {
+  background: var(--dourado);
+  color: #000;
+  font-weight: bold;
+}
+
+/* =====================
+RESUMO
+===================== */
+.resumo,
+.resumo-agendamento {
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+/* =====================
+EXTRAS
+===================== */
+/* =====================
+✨ EXTRAS PREMIUM
+===================== */
+
+.extras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* CARD */
+.extras label {
+  background: linear-gradient(145deg, #111, #1a1a1a);
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* HOVER */
+.extras label:hover {
+  transform: translateY(-5px);
+  border-color: var(--dourado);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+}
+
+/* ESCONDE CHECKBOX */
+.extras input {
+  display: none;
+}
+
+/* TÍTULO */
+.extras label::before {
+  content: attr(data-nome);
+  font-weight: 500;
+  color: var(--texto);
+}
+
+/* PREÇO */
+.extras label::after {
+  content: attr(data-info);
+  font-size: 13px;
+  color: var(--dourado);
+}
+
+/* SELECIONADO */
+.extras input:checked + span {
+  color: var(--dourado);
+}
+
+.extras input:checked ~ * {
+  border-color: var(--dourado);
+}
+
+.extras label:has(input:checked) {
+  border: 2px solid var(--dourado);
+  box-shadow: 0 0 15px rgba(212,175,55,0.3);
+}
+
+/* ÍCONE CHECK */
+.extras label::marker { display: none; }
+
+.extras label::before {
+  display: block;
+  font-size: 15px;
+}
+
+.extras label span {
+  font-size: 13px;
+  color: var(--texto-fraco);
+}
+
+
+/* =====================
+✨ EXTRAS AGENDAMENTO
+===================== */
+
+#extras-agendamento h3 {
+  margin-bottom: 15px;
+}
+
+.extras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+/* CARD */
+.extras label {
+  background: linear-gradient(145deg, #111, #1a1a1a);
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+}
+
+/* HOVER */
+.extras label:hover {
+  transform: translateY(-5px);
+  border-color: var(--dourado);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+}
+
+/* ESCONDE CHECKBOX */
+.extras input {
+  display: none;
+}
+
+/* TÍTULO */
+.extras label::before {
+  content: attr(data-nome);
+  font-weight: 500;
+  color: var(--texto);
+}
+
+/* INFO */
+.extras label::after {
+  content: attr(data-info);
+  font-size: 13px;
+  color: var(--dourado);
+}
+
+/* DESCRIÇÃO */
+.extras label span {
+  font-size: 13px;
+  color: var(--texto-fraco);
+}
+
+/* SELECIONADO */
+.extras label:has(input:checked) {
+  border: 2px solid var(--dourado);
+  box-shadow: 0 0 15px rgba(212,175,55,0.3);
+}
+/* =====================
+PAINEL
+===================== */
+.pendente {
+  border-left: 4px solid orange;
+}
+
+.concluido {
+  border-left: 4px solid green;
+}
+
+/* =====================
+📱 RESPONSIVO
+===================== */
+@media (max-width: 768px) {
+
+  .btn-nav {
+    font-size: 18px;
+    padding: 8px 10px;
+  }
+
+  .btn-prev {
+    left: 8px;
+  }
+
+  .btn-next {
+    right: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .servicos-opcoes {
+    grid-template-columns: 1fr;
+  }
+
+  header h1 {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  nav ol {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+/* =====================
+✨ ANIMAÇÕES SUAVES
+===================== */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* delay automático pra ficar mais bonito */
+.fade-in:nth-child(1) { animation-delay: 0.1s; }
+.fade-in:nth-child(2) { animation-delay: 0.2s; }
+.fade-in:nth-child(3) { animation-delay: 0.3s; }
+.fade-in:nth-child(4) { animation-delay: 0.4s; }
+
+nav a {
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: var(--dourado);
+  letter-spacing: 1px;
+}
+input, button {
+  font-size: 16px;
+}
+
+button {
+  padding: 14px;
+}
+html, body {
+  overflow-x: hidden;
+}
+@media (max-width: 768px) {
+
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  nav ol {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+}
+/* =====================
+🛍️ PRODUTOS (VITRINE PREMIUM)
+===================== */
+
+.grid-produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+/* CARD */
+.produto-card {
+  background: linear-gradient(145deg, #111, #1a1a1a);
+  border: 1px solid #222;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: 0.3s;
+  position: relative;
+}
+
+.produto-card:hover {
+  transform: translateY(-8px);
+  border-color: #d4af37;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+/* IMAGEM */
+.produto-img {
+  height: 180px;
+  overflow: hidden;
+}
+
+.produto-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* INFO */
+.produto-info {
+  padding: 15px;
+}
+
+.produto-info h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* DESCRIÇÃO */
+.descricao {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* PREÇO */
+.preco {
+  font-size: 18px;
+  color: #d4af37;
+  font-weight: bold;
+}
+
+/* =====================
+📱 RESPONSIVO
+===================== */
+@media (max-width: 768px) {
+  .grid-produtos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-produtos {
+    grid-template-columns: 1fr;
+  }
+}

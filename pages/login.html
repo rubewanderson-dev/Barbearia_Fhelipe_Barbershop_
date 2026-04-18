@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>LOGIN</title>
+  <link rel="stylesheet" href="../style/main.css">
+  <link rel="stylesheet" href="../style/login.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
+<link rel="manifest" href="../favicon/site.webmanifest">
+
+</head>
+<body>
+<header>
+    <div class="nomeDaBarbearia"><h1>FHELIPE BARBERSHOP</h1></div>
+    <div>
+      <nav>
+      <ol>
+        <li> <a href="../index.html">Inicio</a></li>
+        <li><a href="servico.html">Serviços</a></li>
+        <li><a href="agendamento.html">Agendar</a></li>
+         <li><a href="produtos.html">Produtos</a></li>
+        <li><a href="painelAgendamento.html">Agendados</a></li>
+        <li><a href="sobre.html">Sobre</a></li>
+      </ol>
+    </nav>
+  </div>
+  </header>
+<h2>Login do barbeiro</h2>
+<input type="text" id="usuario" placeholder="Usuário">
+<input type="password" id="senha" placeholder="Senha">
+<button onclick="login()">Entrar</button>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD64nVKdxmTd3tNsgTMQ9HEal49AUVvIEs",
+  authDomain: "barbearia-649d6.firebaseapp.com",
+  projectId: "barbearia-649d6",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function login() {
+  const usuario = document.getElementById("usuario").value.trim();
+  const senha = document.getElementById("senha").value.trim();
+
+  const q = query(
+    collection(db, "usuarios"),
+    where("usuario", "==", usuario),
+    where("senha", "==", senha)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    // ✅ salva só UMA coisa (controle único)
+    localStorage.setItem("usuario", usuario);
+
+   window.location.href = "painelAgendamento.html";
+  } else {
+    alert("Usuário ou senha inválidos");
+  }
+}
+
+window.login = login;
+</script>
+</body>
+</html>

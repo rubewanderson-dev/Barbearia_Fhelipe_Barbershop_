@@ -1,0 +1,199 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BASE */
+body {
+  background: radial-gradient(circle at top, #1a1a1a, #0b0b0b);
+  color: #eaeaea;
+  font-family: 'Poppins', sans-serif;
+}
+.resumo-agendamento {
+  background: #111;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+}
+
+.resumo-agendamento h3 {
+  color: #d4af37;
+  margin-bottom: 10px;
+}
+/* CONTAINER */
+.container-agendamento {
+  max-width: 500px;
+  margin: 60px auto;
+  background: rgba(20,20,20,0.9);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+}
+
+/* TITULO */
+.container-agendamento h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 2px;
+  color: #d4af37;
+}
+
+/* FORM */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* INPUTS */
+input, select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: #fff;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus, select:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 5px #d4af37;
+}
+
+/* INPUT TIME (deixar discreto) */
+input[type="time"] {
+  opacity: 0.6;
+}
+
+/* GRADE DE HORÁRIOS */
+#gradeHorarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* HORÁRIOS */
+.horario {
+  padding: 12px;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+  border: 1px solid transparent;
+}
+
+/* LIVRE */
+.livre {
+  background: #1f1f1f;
+  color: #ccc;
+}
+
+.livre:hover {
+  background: #d4af37;
+  color: #000;
+  transform: scale(1.05);
+}
+
+/* OCUPADO */
+.ocupado {
+  background: #2a2a2a;
+  color: #666;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* SELECIONADO */
+.selecionado {
+  background: linear-gradient(45deg, #d4af37, #f1c94a);
+  color: #000;
+  font-weight: bold;
+  border: 1px solid #fff;
+}
+
+/* BOTÃO */
+button {
+  margin-top: 10px;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(45deg, #d4af37, #f1c94a);
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* MENSAGEM */
+#mensagem {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #4caf50;
+}
+
+/* RESPONSIVO */
+@media (max-width: 500px) {
+  .container-agendamento {
+    margin: 30px 10px;
+    padding: 20px;
+  }
+
+  #gradeHorarios {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.select-bloqueado {
+  display: none;
+}
+.servicos-opcoes {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.servico-card {
+  flex: 1;
+  background: #111;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s;
+  font-size: 13px;
+}
+
+.servico-card:hover {
+  transform: scale(1.05);
+}
+
+.servico-card.ativo {
+  border: 2px solid #d4af37;
+  background: #1c1c1c;
+}
+
+.servico-card span {
+  display: block;
+  margin-top: 10px;
+  color: #d4af37;
+}
+#extras-agendamento {
+  margin-bottom: 20px;
+}
+
+#extras-agendamento label {
+  display: block;
+  margin: 8px 0;
+  cursor: pointer;
+}
