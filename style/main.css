@@ -599,3 +599,22 @@ html, body {
   gap: 25px;
   margin-top: 30px;
 }
+#btnInstall {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(45deg, #d4af37, #f1c94a);
+  color: #000;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(212,175,55,0.4);
+  z-index: 999;
+  transition: 0.3s;
+}
+
+#btnInstall:hover {
+  transform: scale(1.05);
+}

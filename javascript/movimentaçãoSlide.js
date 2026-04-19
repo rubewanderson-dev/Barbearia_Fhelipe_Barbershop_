@@ -63,3 +63,40 @@ btnPrev.addEventListener("click", (e) => {
 /* iniciar */
 atualizar();
 iniciar();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(() => console.log("SW ativo"))
+    .catch(err => console.log("Erro SW", err));
+}
+
+let deferredPrompt;
+const btnInstall = document.getElementById("btnInstall");
+
+// 🔥 CAPTURA O EVENTO
+window.addEventListener("beforeinstallprompt", (e) => {
+  console.log("Evento de instalação capturado 🔥");
+  e.preventDefault();
+  deferredPrompt = e;
+  btnInstall.style.display = "block";
+});
+
+// 🔥 CLICK DO BOTÃO
+btnInstall.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if (outcome === "accepted") {
+    console.log("Usuário instalou o app");
+  }
+
+  deferredPrompt = null;
+  btnInstall.style.display = "none";
+});
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  console.log("🔥 Pode instalar!");
+});
