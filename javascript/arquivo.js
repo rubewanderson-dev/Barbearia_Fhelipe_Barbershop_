@@ -32,7 +32,7 @@ form.addEventListener('submit', async (e) => {
     // =========================
     // 📲 WHATSAPP (INTEGRADO CERTO)
     // =========================
-    const numero = "5591999999999"; // 🔥 COLOCA SEU NÚMERO AQUI
+    const numero = "5594981298951"; // 🔥 COLOCA SEU NÚMERO AQUI
 
     const mensagem = `📅 *Novo Agendamento!*
 
