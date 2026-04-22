@@ -26,8 +26,7 @@
         <li><a href="servico.html">Serviços</a></li>
         <li><a href="agendamento.html">Agendar</a></li>
          <li><a href="produtos.html">Produtos</a></li>
-        <li><a href="painelAgendamento.html">Agendados</a></li>
-      
+        <li><a href="agenda.html">Agendados</a></li>
       </ol>
     </nav>
   </div>
@@ -79,21 +78,23 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
+
+  apiKey: "AIzaSyD64nVKdxmTd3tNsgTMQ9HEal49AUVvIEs",
   authDomain: "barbearia-649d6.firebaseapp.com",
   projectId: "barbearia-649d6",
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const diasFechados = [0]; // 0 = domingo
 
-// 🔥 ESTADO GLOBAL (organizado)
+// =========================
+// 🔥 ESTADO
+// =========================
 let servicoSelecionado = "";
-let tempoBase = 0;
-let valorBase = 0;
-let extrasSelecionados = [];
 let tempoTotal = 0;
 let valorTotal = 0;
+let extrasSelecionados = [];
 
 // ELEMENTOS
 const form = document.getElementById('formAgendamento');
@@ -101,20 +102,17 @@ const grade = document.getElementById("gradeHorarios");
 const inputData = document.getElementById("data");
 const inputHora = document.getElementById("hora");
 
-// 🔥 CARREGAR DADOS DO LOCALSTORAGE
+// =========================
+// 🔥 DADOS LOCALSTORAGE
+// =========================
 const dadosSalvos = JSON.parse(localStorage.getItem("agendamento"));
 
 if (dadosSalvos) {
-
   servicoSelecionado = dadosSalvos.servico;
-  tempoTotal = dadosSalvos.tempo;
-  valorTotal = dadosSalvos.valor;
+  tempoTotal = Number(dadosSalvos.tempo);
+  valorTotal = Number(dadosSalvos.valor);
   extrasSelecionados = dadosSalvos.extras || [];
 
-  tempoBase = dadosSalvos.tempo;
-  valorBase = dadosSalvos.valor;
-
-  // MOSTRAR RESUMO
   document.getElementById("res-servico").innerText =
     "Serviço: " + servicoSelecionado;
 
@@ -126,22 +124,19 @@ if (dadosSalvos) {
 
   document.getElementById("res-valor").innerText =
     "Valor: R$ " + valorTotal;
-
-  // 🔥 já libera horários automaticamente se tiver data
-  if (document.getElementById("data").value) {
-    carregarHorarios();
-  }
 }
 
-// 🔥 HORÁRIOS
+// =========================
+// ⏰ HORÁRIOS
+// =========================
 const horarios = [
   "08:00","09:00","10:00","11:00",
-  "13:00","14:00","15:00","16:00","17:00",
-  "18:00","19:00","20:00","21:"
+  "13:00","14:00","15:00","16:00",
+  "17:00","18:00","19:00","20:00","21:00"
 ];
 
 // =========================
-// 🎯 CARREGAR HORÁRIOS
+// 📅 CARREGAR HORÁRIOS
 // =========================
 inputData.addEventListener("change", carregarHorarios);
 
@@ -149,10 +144,17 @@ async function carregarHorarios() {
 
   const dataSelecionada = inputData.value;
 
-  // 🔥 agora só depende da data
   if (!dataSelecionada || !tempoTotal) return;
 
   grade.innerHTML = "";
+
+  const diaSemana = new Date(dataSelecionada + "T00:00:00").getDay();
+
+  // 🚫 BLOQUEIO TOTAL
+  if (diasFechados.includes(diaSemana)) {
+    grade.innerHTML = "<p style='color:#ff0000'>Fechado neste dia</p>";
+    return;
+  }
 
   let ocupados = [];
 
@@ -167,7 +169,7 @@ async function carregarHorarios() {
 
     ocupados = snapshot.docs.map(doc => ({
       hora: doc.data().hora,
-      tempo: doc.data().tempo || 40
+      tempo: Number(doc.data().tempo) || 40
     }));
 
   } catch (error) {
@@ -191,9 +193,7 @@ async function carregarHorarios() {
       const inicioOcupado = oh * 60 + om;
       const fimOcupado = inicioOcupado + ag.tempo;
 
-      if (
-        (inicioAtual < fimOcupado && fimAtual > inicioOcupado)
-      ) {
+      if (inicioAtual < fimOcupado && fimAtual > inicioOcupado) {
         bloqueado = true;
       }
     });
@@ -204,7 +204,9 @@ async function carregarHorarios() {
       div.classList.add("livre");
 
       div.onclick = () => {
-        document.querySelectorAll(".horario").forEach(h => h.classList.remove("selecionado"));
+        document.querySelectorAll(".horario")
+          .forEach(h => h.classList.remove("selecionado"));
+
         div.classList.add("selecionado");
         inputHora.value = hora;
       };
@@ -215,66 +217,66 @@ async function carregarHorarios() {
 }
 
 // =========================
-// 🎯 CARDS DE SERVIÇO
-// =========================
-const cards = document.querySelectorAll(".servico-card");
-
-cards.forEach(card => {
-  card.addEventListener("click", () => {
-
-    cards.forEach(c => c.classList.remove("ativo"));
-    card.classList.add("ativo");
-
-    servicoSelecionado = card.dataset.servico;
-    tempoBase = Number(card.dataset.tempo);
-    valorBase = Number(card.dataset.valor);
-
-    atualizarResumo();
-  });
-});
-
-// =========================
-// 🎯 EXTRAS
-// =========================
-const extrasInputs = document.querySelectorAll(".extra");
-
-extrasInputs.forEach(extra => {
-  extra.addEventListener("change", atualizarResumo);
-});
-
-function atualizarResumo() {
-
-  tempoTotal = tempoBase;
-  valorTotal = valorBase;
-  extrasSelecionados = [];
-
-  extrasInputs.forEach(extra => {
-    if (extra.checked) {
-      tempoTotal += Number(extra.dataset.tempo);
-      valorTotal += Number(extra.dataset.valor);
-      extrasSelecionados.push(extra.dataset.nome);
-    }
-  });
-
-  // RESUMO
-  document.getElementById("res-servico").innerText =
-    "Corte: " + (servicoSelecionado || "Nenhum");
-
-  document.getElementById("res-extras").innerText =
-    "Serviços Adicionais: " + (extrasSelecionados.join(", ") || "Nenhum");
-
-  document.getElementById("res-tempo").innerText =
-    "Tempo: " + tempoTotal + " min";
-
-  document.getElementById("res-valor").innerText =
-    "Valor: R$ " + valorTotal;
-
-  carregarHorarios();
-}
-
-// =========================
 // 📩 ENVIO
 // =========================
+/*form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nome = document.getElementById('nome').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+  const data = inputData.value;
+  const hora = inputHora.value;
+
+  // 🔒 VALIDAÇÃO
+  if (!servicoSelecionado) {
+    alert("Escolha um serviço!");
+    return;
+  }
+
+  if (!hora) {
+    alert("Selecione um horário!");
+    return;
+  }
+
+  if (!data) {
+    alert("Selecione uma data!");
+    return;
+
+  }
+
+  try {
+
+    const dataISO = new Date(data).toISOString().split("T")[0];
+
+    await addDoc(collection(db, "agendamentos"), {
+      nome,
+      telefone,
+      servico: servicoSelecionado,
+      extras: extrasSelecionados,
+      valor: Number(valorTotal),
+      tempo: Number(tempoTotal),
+      data: dataISO,
+      hora,
+      status: "pendente"
+    });
+const diaSemana = new Date(data + "T00:00:00").getDay();
+////////////////////////////////////////////
+if (diasFechados.includes(diaSemana)) {
+  alert("Não atendemos nesse dia.");
+  return;
+}
+//////////////////////////////////////////////
+    document.getElementById("mensagem").innerText =
+      "Agendamento realizado com sucesso!";
+
+    form.reset();
+    grade.innerHTML = "";
+
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+    alert("Erro ao agendar!");
+  }
+});*/
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -305,6 +307,27 @@ form.addEventListener('submit', async (e) => {
       hora,
       status: "pendente"
     });
+
+    // =========================
+    // 📲 WHATSAPP (INTEGRADO CERTO)
+    // =========================
+    const numero = "5594981298951"; // 🔥 COLOCA SEU NÚMERO AQUI
+
+    const mensagem = `📅 *Novo Agendamento!*
+
+👤 Nome: ${nome}
+📱 Telefone: ${telefone}
+✂️ Serviço: ${servicoSelecionado}
+📌 Extras: ${extrasSelecionados.join(", ") || "Nenhum"}
+🗓️ Data: ${data}
+⌚ Hora: ${hora}
+💲Valor: R$ ${valorTotal}`;
+
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+
+    window.open(url, "_blank");
+
+    // =========================
 
     document.getElementById("mensagem").innerText =
       "Agendamento realizado com sucesso!";

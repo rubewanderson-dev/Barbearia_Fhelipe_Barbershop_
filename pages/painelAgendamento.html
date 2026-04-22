@@ -4,23 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel de Agendamentos</title>
+
   <link rel="stylesheet" href="../style/main.css">
   <link rel="stylesheet" href="../style/painel.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
-<link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
-
-
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#d4af37">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  
+
 <header>
-    <div class="nomeDaBarbearia"><h1>FHELIPE BARBERSHOP</h1></div>
-    <div>
+  <h1>FHELIPE BARBERSHOP</h1>
+  <div>
       <nav>
       <ol>
         <li> <a href="../index.html">Inicio</a></li>
@@ -32,129 +27,217 @@
       </ol>
     </nav>
   </div>
-  </header>
-<header>
-  <h1>AGENDAMENTOS</h1>
+
 </header>
+
+<h2 style="text-align:center;">AGENDAMENTOS</h2>
+
 <button onclick="logout()">Sair</button>
+
 <main>
+  <div class="agenda">
 
-  <h2>Pendentes</h2>
-  <div id="pendentes"></div>
+    <div class="header-dias" id="headerDias"></div>
 
-  <h2 style="margin-top:30px;">Concluídos</h2>
-  <div id="concluidos"></div>
+    <div class="corpo-agenda">
+      <div class="coluna-horas" id="colunaHoras"></div>
+      <div class="grid-agenda" id="gridAgenda"></div>
+    </div>
 
+  </div>
 </main>
+<div class="overlay" id="overlay"></div>
 
-<script type="module">// 🔐 PROTEÇÃO
+<div class="popup" id="popup">
+  <div id="popupConteudo"></div>
+</div>
+
+
+
+
+<script type="module">
+
+// 🔐 PROTEÇÃO
 const usuario = localStorage.getItem("usuario");
+if (!usuario) window.location.replace("login.html");
 
-if (!usuario) {
-  window.location.replace("login.html"); // melhor que href
-} else {
+// 🔥 FIREBASE
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  doc,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // 🔥 SÓ EXECUTA SE ESTIVER LOGADO
+const firebaseConfig = {
+  apiKey: "AIzaSyD64nVKdxmTd3tNsgTMQ9HEal49AUVvIEs",
+  authDomain: "barbearia-649d6.firebaseapp.com",
+  projectId: "barbearia-649d6",
+};
 
-  import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js").then(({ initializeApp }) => {
-    import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js").then(({ getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc }) => {
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyD64nVKdxmTd3tNsgTMQ9HEal49AUVvIEs",
-        authDomain: "barbearia-649d6.firebaseapp.com",
-        projectId: "barbearia-649d6",
+// 🎯 ELEMENTOS
+const headerDias = document.getElementById("headerDias");
+const colunaHoras = document.getElementById("colunaHoras");
+const gridAgenda = document.getElementById("gridAgenda");
+
+// 🔥 POPUP ELEMENTOS
+const overlay = document.getElementById("overlay");
+const popup = document.getElementById("popup");
+const popupConteudo = document.getElementById("popupConteudo");
+
+// CONFIG
+const diasSemana = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const horaInicio = 8;
+const horaFim = 20;
+const alturaHora = 60;
+
+// DATA BASE
+const hoje = new Date();
+const inicioSemana = new Date(hoje);
+inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+
+// 🔢 CONVERTER HORA
+function horaParaMinutos(hora) {
+  const [h, m] = hora.split(":").map(Number);
+  return h * 60 + m;
+}
+
+// 📅 HEADER DIAS
+headerDias.innerHTML = "<div></div>";
+
+for (let i = 0; i < 7; i++) {
+  const d = new Date(inicioSemana);
+  d.setDate(d.getDate() + i);
+
+  const div = document.createElement("div");
+  div.innerText = `${diasSemana[d.getDay()]} ${d.getDate()}`;
+  headerDias.appendChild(div);
+}
+
+// ⏰ HORÁRIOS
+for (let h = horaInicio; h <= horaFim; h++) {
+  const div = document.createElement("div");
+  div.innerText = `${h}:00`;
+  colunaHoras.appendChild(div);
+}
+
+// 📊 COLUNAS
+const camadas = [];
+
+for (let i = 0; i < 7; i++) {
+  const coluna = document.createElement("div");
+  coluna.classList.add("coluna-dia");
+
+  for (let h = horaInicio; h <= horaFim; h++) {
+    const linha = document.createElement("div");
+    linha.classList.add("linha-hora");
+    coluna.appendChild(linha);
+  }
+
+  const camada = document.createElement("div");
+  camada.classList.add("camada-agendamentos");
+
+  coluna.appendChild(camada);
+  gridAgenda.appendChild(coluna);
+
+  camadas.push(camada);
+}
+
+// 🔥 LISTENER
+onSnapshot(collection(db, "agendamentos"), (snapshot) => {
+
+  camadas.forEach(c => c.innerHTML = "");
+
+  snapshot.forEach(docSnap => {
+
+    const ag = docSnap.data();
+    const id = docSnap.id;
+
+    if (!ag.data || !ag.hora) return;
+
+    const dataAg = new Date(ag.data + "T00:00:00");
+
+    const diff = Math.floor(
+      (dataAg - inicioSemana) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diff < 0 || diff > 6) return;
+
+    const camada = camadas[diff];
+
+    const inicio = horaParaMinutos(ag.hora);
+    const base = horaInicio * 60;
+
+    const top = ((inicio - base) / 60) * alturaHora;
+    const altura = Math.max((ag.tempo / 60) * alturaHora, 50);
+
+    const div = document.createElement("div");
+    div.classList.add("agendamento");
+
+    if (ag.status === "concluido") {
+      div.classList.add("concluido");
+    }
+
+    div.style.top = top + "px";
+    div.style.height = altura + "px";
+
+    // 🔥 CARD SIMPLES
+    div.innerHTML = `
+      <strong>${ag.nome}</strong><br>
+      <span>${ag.hora}</span>
+    `;
+
+    // 🔥 CLICK → ABRE POPUP
+    div.addEventListener("click", () => {
+
+      popupConteudo.innerHTML = `
+        <h3>${ag.nome}</h3>
+        <p><strong>Serviço:</strong> ${ag.servico}</p>
+        <p><strong>Hora:</strong> ${ag.hora}</p>
+        <p><strong>Valor:</strong> R$ ${ag.valor}</p>
+        <p><strong>Extras:</strong> ${(ag.extras || []).join(", ")}</p>
+        <p><strong>Telefone:</strong> ${ag.telefone}</p>
+
+        <button id="btnConcluir">Concluir</button>
+      `;
+
+      overlay.classList.add("ativo");
+      popup.classList.add("ativo");
+
+      document.getElementById("btnConcluir").onclick = async () => {
+        await updateDoc(doc(db, "agendamentos", id), {
+          status: "concluido"
+        });
+
+        fecharPopup();
       };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+    });
 
-      const pendentesDiv = document.getElementById('pendentes');
-      const concluidosDiv = document.getElementById('concluidos');
-
-      onSnapshot(collection(db, "agendamentos"), (snapshot) => {
-
-        pendentesDiv.innerHTML = "";
-        concluidosDiv.innerHTML = "";
-
-        const lista = [];
-
-        snapshot.forEach((docSnap) => {
-          lista.push({
-            id: docSnap.id,
-            ...docSnap.data()
-          });
-        });
-
-        lista.sort((a, b) => {
-          const dataA = new Date(`${a.data}T${a.hora}`);
-          const dataB = new Date(`${b.data}T${b.hora}`);
-          return dataA - dataB;
-        });
-
-lista.forEach((ag) => {
-
-  const card = document.createElement('div');
-
-  card.innerHTML = `
-    <p><strong>${ag.nome}</strong></p>
-    <p>${ag.servico}</p>
-    <p>Extras: ${(ag.extras || []).join(", ")}</p>
-    <p>${ag.data} às ${ag.hora}</p>
-    <p>Tempo: ${ag.tempo} min</p>
-    <p>Valor: R$ ${ag.valor}</p>
-  `;
-
-  // 👇 AGORA SIM FUNCIONA
-  if (!ag.status || ag.status === "pendente") {
-    card.classList.add("pendente");
-  } else {
-    card.classList.add("concluido");
-  }
-
-  if (!ag.status || ag.status === "pendente") {
-
-    const btn = document.createElement('button');
-    btn.innerText = "Atendido";
-
-    btn.onclick = async () => {
-      await updateDoc(doc(db, "agendamentos", ag.id), {
-        status: "concluido"
-      });
-    };
-
-    card.appendChild(btn);
-    pendentesDiv.appendChild(card);
-
-  } else {
-
-    const btn = document.createElement('button');
-    btn.innerText = "Remover";
-
-    btn.onclick = async () => {
-      await deleteDoc(doc(db, "agendamentos", ag.id));
-    };
-
-    card.appendChild(btn);
-    concluidosDiv.appendChild(card);
-  }
-
+    camada.appendChild(div);
+  });
 });
 
-      });
-
-    });
-  });
-
+// 🔥 FECHAR POPUP
+function fecharPopup() {
+  overlay.classList.remove("ativo");
+  popup.classList.remove("ativo");
 }
+
+overlay.addEventListener("click", fecharPopup);
+
+// 🚪 LOGOUT
 function logout() {
-  localStorage.clear(); // 🔥 garante que tudo seja removido
-window.location.href = "login.html";
+  localStorage.clear();
+  window.location.href = "login.html";
 }
-
-// 🚪 LOGOUT (reforçado)
-
-
 window.logout = logout;
+
 </script>
 </body>
 </html>
