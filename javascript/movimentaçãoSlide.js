@@ -26,7 +26,7 @@ function anterior() {
 
 /* automático */
 function iniciar() {
-  intervalo = setInterval(proximo, 3000);
+  intervalo = setInterval(proximo, 5000);
 }
 
 /* parar */
