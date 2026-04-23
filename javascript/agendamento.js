@@ -1,72 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AGENDAMENTO</title>
-  <link rel="stylesheet" href="../style/main.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-
-<link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
-
-
-
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#d4af37">
-</head>
-<body>
-<header>
-    <div class="nomeDaBarbearia"><h1>FHELIPE BARBERSHOP</h1></div>
-    <div>
-      <nav>
-      <ol>
-        <li> <a href="../index.html">Inicio</a></li>
-        <li><a href="servico.html">Serviços</a></li>
-        <li><a href="agendamento.html">Agendar</a></li>
-         <li><a href="produtos.html">Produtos</a></li>
-        <li><a href="agenda.html">Agendados</a></li>
-      </ol>
-    </nav>
-  </div>
-  </header>
-
-<main>
-  <div class="container-agendamento">
-
-    <h2>Continuar agendamento</h2>
-    <br>
-<div class="resumo-agendamento">
-  <h3>Detalhes do Agendamento</h3>
-  <p id="res-servico"></p>
-  <p id="res-extras"></p>
-  <p id="res-tempo"></p>
-  <p id="res-valor"></p>
-</div>
-<br>
-<div id="escolha-servico">
-<br>
-</div>
-    <form id="formAgendamento">
-
-      <input type="text" id="nome" placeholder="Seu nome ou apelido" required>
-      <input type="tel" id="telefone" placeholder="Telefone" required>
-
-      <input type="date" id="data" required>
-      <div id="gradeHorarios"></div>
-
-      <input type="time" id="hora" required>
-      <p>Você será direcionado para o Whatsapp para finalizar o agendamento!</p>
-      <button type="submit">CONFIRMAR AGENDAMENTO</button>
-
-    </form>
-
-    <div id="mensagem"></div>
-
-  </div>
-</main>
-<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
   getFirestore, 
@@ -113,17 +44,19 @@ if (dadosSalvos) {
   valorTotal = Number(dadosSalvos.valor);
   extrasSelecionados = dadosSalvos.extras || [];
 
-  document.getElementById("res-servico").innerText =
-    "Serviço: " + servicoSelecionado;
+ document.getElementById("res-servico").innerText =
+   (servicoSelecionado || "Nenhum");
 
   document.getElementById("res-extras").innerText =
-    "Extras: " + (extrasSelecionados.join(", ") || "Nenhum");
+    "+" + (extrasSelecionados.join(", ") || "Nenhum");
 
   document.getElementById("res-tempo").innerText =
     "Tempo: " + tempoTotal + " min";
 
   document.getElementById("res-valor").innerText =
     "Valor: R$ " + valorTotal;
+
+  carregarHorarios();
 }
 
 // =========================
@@ -340,8 +273,3 @@ form.addEventListener('submit', async (e) => {
     alert("Erro ao agendar!");
   }
 });
-</script>
-
-</body>
-
-</html>

@@ -26,7 +26,7 @@ function anterior() {
 
 /* automático */
 function iniciar() {
-  intervalo = setInterval(proximo, 5000);
+  intervalo = setInterval(proximo, 7000);
 }
 
 /* parar */
@@ -34,10 +34,10 @@ function parar() {
   clearInterval(intervalo);
 }
 
-/* pausa ao clicar */
+/* pausa ao clicar 
 container.addEventListener("click", parar);
 
-/* botões criados via JS */
+ botões criados via JS 
 const btnPrev = document.createElement("button");
 btnPrev.innerHTML = "❮";
 btnPrev.classList.add("btn-nav", "btn-prev");
@@ -49,7 +49,7 @@ btnNext.classList.add("btn-nav", "btn-next");
 container.appendChild(btnPrev);
 container.appendChild(btnNext);
 
-/* eventos */
+/* eventos 
 btnNext.addEventListener("click", (e) => {
   e.stopPropagation();
   proximo();
@@ -58,7 +58,7 @@ btnNext.addEventListener("click", (e) => {
 btnPrev.addEventListener("click", (e) => {
   e.stopPropagation();
   anterior();
-});
+});*/
 
 /* iniciar */
 atualizar();
