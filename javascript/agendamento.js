@@ -44,11 +44,11 @@ if (dadosSalvos) {
   valorTotal = Number(dadosSalvos.valor);
   extrasSelecionados = dadosSalvos.extras || [];
 
- document.getElementById("res-servico").innerText =
+ document.getElementById("res-servico").innerText = "" +
    (servicoSelecionado || "Nenhum");
 
   document.getElementById("res-extras").innerText =
-    "+" + (extrasSelecionados.join(", ") || "Nenhum");
+    "Adicional:" + (extrasSelecionados.join(", ") || "Nenhum");
 
   document.getElementById("res-tempo").innerText =
     "Tempo: " + tempoTotal + " min";
