@@ -176,7 +176,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-   apiKey: "AIzaSyD64nVKdxmTd3tNsgTMQ9HEal49AUVvIEs",
+  apiKey: "SUA_API_KEY",
   authDomain: "barbearia-649d6.firebaseapp.com",
   projectId: "barbearia-649d6",
 };
@@ -213,7 +213,7 @@ if (dadosSalvos) {
 
   // MOSTRAR RESUMO
   document.getElementById("res-servico").innerText =
-    "Serviço: " + servicoSelecionado;
+    "Serviço adicional: " + servicoSelecionado;
 
   document.getElementById("res-extras").innerText =
     "Extras: " + (extrasSelecionados.join(", ") || "Nenhum");
@@ -252,30 +252,6 @@ async function carregarHorarios() {
   grade.innerHTML = "";
 
   let ocupados = [];
-  
-// =========================
-// 📅 CARREGAR HORÁRIOS
-// =========================
-inputData.addEventListener("change", carregarHorarios);
-
-async function carregarHorarios() {
-
-  const dataSelecionada = inputData.value;
-
-  if (!dataSelecionada || !tempoTotal) return;
-
-  grade.innerHTML = "";
-
-  const diaSemana = new Date(dataSelecionada + "T00:00:00").getDay();
-
-  // 🚫 BLOQUEIO TOTAL
-  if (diasFechados.includes(diaSemana)) {
-    grade.innerHTML = "<p style='color:#ff0000'>Fechado neste dia</p>";
-    return;
-  }
-
-  let ocupados = [];
-}
 
   try {
     const q = query(
